@@ -1,0 +1,6 @@
+log/
+work/
+transcript
+vsim.wlf
+*.jou
+*.log
