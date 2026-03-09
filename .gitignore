@@ -1,6 +1,10 @@
+axi_sva/arm
+
 log/
 work/
 transcript
 vsim.wlf
 *.jou
 *.log
+*.csv
+*.txt

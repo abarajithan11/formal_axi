@@ -4,3 +4,6 @@
 [submodule "ip/pulp_ip/pulp_platform/axi"]
 	path = ip/pulp_ip/pulp_platform/axi
 	url = git@github.com:KastnerRG/pulp_axi.git
+[submodule "axi_sva/yosys"]
+	path = axi_sva/yosys
+	url = git@github.com:KastnerRG/yosys-SVA-AXI4_FVIP.git
