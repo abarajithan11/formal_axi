@@ -41,7 +41,7 @@ module tb_axi_fifo;
     .DATA_W(`AXI_DATA_W),
     .ID_W(`AXI_ID_W),
     .USER_W(`AXI_USER_W)
-  ) u_s_sva_wrap (
+  ) u_sw (
     .clk(clk),
     .rst(rst),
     .axi(s_axi)
@@ -52,7 +52,7 @@ module tb_axi_fifo;
     .DATA_W(`AXI_DATA_W),
     .ID_W(`AXI_ID_W),
     .USER_W(`AXI_USER_W)
-  ) u_m_sva_wrap (
+  ) u_mw (
     .clk(clk),
     .rst(rst),
     .axi(m_axi)

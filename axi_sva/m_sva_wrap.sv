@@ -55,7 +55,7 @@ module m_sva_wrap #(
     .DATA_W(DATA_W),
     .ID_W(ID_W),
     .USER_W(USER_W)
-  ) u_our_axi_fvip (
+  ) u_our (
     .clk(clk),
     .rstn(~rst),
     .aw_valid(axi.aw_valid),
