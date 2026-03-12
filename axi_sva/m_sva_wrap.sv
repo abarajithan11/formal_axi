@@ -2,16 +2,8 @@
 
 `include "params.svh"
 `define MASTER
-`include "axi_sva/our/aw_fvip.sv"
-`include "axi_sva/our/ar_fvip.sv"
-`include "axi_sva/our/w_fvip.sv"
 `include "axi_sva/our/axi_fvip.sv"
 `undef MASTER
-
-`define SLAVE
-`include "axi_sva/our/r_fvip.sv"
-`include "axi_sva/our/b_fvip.sv"
-`undef SLAVE
 
 module m_sva_wrap #(
   parameter int ADDR_W = `AXI_ADDR_W,

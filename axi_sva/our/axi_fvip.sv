@@ -1,3 +1,9 @@
+`include "aw_fvip.sv"
+`include "ar_fvip.sv"
+`include "w_fvip.sv"
+`include "r_fvip.sv"
+`include "b_fvip.sv"
+
 `define CONCAT(a,b) a``b
 
 `ifdef MASTER
