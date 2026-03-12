@@ -35,6 +35,7 @@ axi_sva/yosys_questa_formal_wrapper.sv
 axi_sva/zipcpu/formal_axi_master.v
 axi_sva/zipcpu/formal_axi_slave.v
 axi_sva/zipcpu/zipcpu_formal_wrapper.sv
+axi_sva/our/pkg_axi_fvip.sv
 axi_sva/s_sva_wrap.sv
 axi_sva/m_sva_wrap.sv
 
