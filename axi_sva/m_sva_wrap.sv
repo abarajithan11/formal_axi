@@ -12,20 +12,20 @@ module m_sva_wrap #(
   input logic rst,
   AXI_BUS.Monitor axi
 );
-`ifdef HAVE_ARM_AXI_SVA
-  arm_formal_wrapper #(
-    .ADDR_W(ADDR_W),
-    .DATA_W(DATA_W),
-    .ID_W(ID_W),
-    .USER_W(USER_W)
-  ) u_arm (
-    .clk(clk),
-    .rst(rst),
-    .axi(axi)
-  );
-`endif
+// `ifdef HAVE_ARM_AXI_SVA
+//   arm_formal_wrapper #(
+//     .ADDR_W(ADDR_W),
+//     .DATA_W(DATA_W),
+//     .ID_W(ID_W),
+//     .USER_W(USER_W)
+//   ) u_arm (
+//     .clk(clk),
+//     .rst(rst),
+//     .axi(axi)
+//   );
+// `endif
 
-  yosys_formal_wrapper #(
+  yosys_questa_formal_wrapper #(
     .ADDR_W(ADDR_W),
     .DATA_W(DATA_W),
     .ID_W(ID_W),
@@ -37,13 +37,13 @@ module m_sva_wrap #(
     .axi(axi)
   );
 
-  f_axi_m_wrapper #(
-    .ADDR_W(ADDR_W),
-    .DATA_W(DATA_W),
-    .ID_W(ID_W)
-  ) u_zipcpu (
-    .clk(clk),
-    .rst(rst),
-    .axi(axi)
-  );
+  // f_axi_m_wrapper #(
+  //   .ADDR_W(ADDR_W),
+  //   .DATA_W(DATA_W),
+  //   .ID_W(ID_W)
+  // ) u_zipcpu (
+  //   .clk(clk),
+  //   .rst(rst),
+  //   .axi(axi)
+  // );
 endmodule
