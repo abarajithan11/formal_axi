@@ -39,65 +39,70 @@ module `CONCAT(`ROLE,_ar_fvip) #(
   wire stall = ar_valid && !ar_ready;
   wire hsk = ar_valid && ar_ready;
 
+  a_valid_low_after:
+    `ASSUME property (low_after(rstn, ar_valid));
+  a_valid_not_with_rise:
+    `ASSUME property (not_with_rise(rstn, ar_valid));
+
   a_valid_not_unknown:
     `ASSUME property (not_unknown(ar_valid));
   a_ready_not_unknown:
     `ASSERT property (not_unknown(ar_ready));
 
   a_id_stall_stable:
-    `ASSUME property (stable_next_when(ar_id, stall));
+    `ASSUME property (stable_next_when(stall, ar_id));
   a_id_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_id, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_id));
 
   a_addr_stall_stable:
-    `ASSUME property (stable_next_when(ar_addr, stall));
+    `ASSUME property (stable_next_when(stall, ar_addr));
   a_addr_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_addr, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_addr));
 
   a_len_stall_stable:
-    `ASSUME property (stable_next_when(ar_len, stall));
+    `ASSUME property (stable_next_when(stall, ar_len));
   a_len_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_len, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_len));
 
   a_size_stall_stable:
-    `ASSUME property (stable_next_when(ar_size, stall));
+    `ASSUME property (stable_next_when(stall, ar_size));
   a_size_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_size, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_size));
 
   a_burst_stall_stable:
-    `ASSUME property (stable_next_when(ar_burst, stall));
+    `ASSUME property (stable_next_when(stall, ar_burst));
   a_burst_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_burst, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_burst));
 
   a_lock_stall_stable:
-    `ASSUME property (stable_next_when(ar_lock, stall));
+    `ASSUME property (stable_next_when(stall, ar_lock));
   a_lock_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_lock, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_lock));
 
   a_cache_stall_stable:
-    `ASSUME property (stable_next_when(ar_cache, stall));
+    `ASSUME property (stable_next_when(stall, ar_cache));
   a_cache_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_cache, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_cache));
 
   a_prot_stall_stable:
-    `ASSUME property (stable_next_when(ar_prot, stall));
+    `ASSUME property (stable_next_when(stall, ar_prot));
   a_prot_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_prot, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_prot));
 
   a_qos_stall_stable:
-    `ASSUME property (stable_next_when(ar_qos, stall));
+    `ASSUME property (stable_next_when(stall, ar_qos));
   a_qos_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_qos, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_qos));
 
   a_region_stall_stable:
-    `ASSUME property (stable_next_when(ar_region, stall));
+    `ASSUME property (stable_next_when(stall, ar_region));
   a_region_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_region, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_region));
 
   a_user_stall_stable:
-    `ASSUME property (stable_next_when(ar_user, stall));
+    `ASSUME property (stable_next_when(stall, ar_user));
   a_user_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(ar_user, ar_valid));
+    `ASSUME property (not_unknown_when(ar_valid, ar_user));
 endmodule
 
 `undef ROLE

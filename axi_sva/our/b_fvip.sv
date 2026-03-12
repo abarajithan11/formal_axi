@@ -30,25 +30,30 @@ module `CONCAT(`ROLE,_b_fvip) #(
   wire stall = b_valid && !b_ready;
   wire hsk = b_valid && b_ready;
 
+  a_valid_low_after:
+    `ASSUME property (low_after(rstn, b_valid));
+  a_valid_not_with_rise:
+    `ASSUME property (not_with_rise(rstn, b_valid));
+
   a_valid_not_unknown:
     `ASSUME property (not_unknown(b_valid));
   a_ready_not_unknown:
     `ASSERT property (not_unknown(b_ready));
 
   a_id_stall_stable:
-    `ASSUME property (stable_next_when(b_id, stall));
+    `ASSUME property (stable_next_when(stall, b_id));
   a_id_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(b_id, b_valid));
+    `ASSUME property (not_unknown_when(b_valid, b_id));
 
   a_resp_stall_stable:
-    `ASSUME property (stable_next_when(b_resp, stall));
+    `ASSUME property (stable_next_when(stall, b_resp));
   a_resp_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(b_resp, b_valid));
+    `ASSUME property (not_unknown_when(b_valid, b_resp));
 
   a_user_stall_stable:
-    `ASSUME property (stable_next_when(b_user, stall));
+    `ASSUME property (stable_next_when(stall, b_user));
   a_user_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(b_user, b_valid));
+    `ASSUME property (not_unknown_when(b_valid, b_user));
 endmodule
 
 `undef ROLE

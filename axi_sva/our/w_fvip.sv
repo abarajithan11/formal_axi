@@ -32,30 +32,35 @@ module `CONCAT(`ROLE,_w_fvip) #(
   wire hsk = w_valid && w_ready;
   wire hsk_last = hsk && w_last;
 
+  a_valid_low_after:
+    `ASSUME property (low_after(rstn, w_valid));
+  a_valid_not_with_rise:
+    `ASSUME property (not_with_rise(rstn, w_valid));
+
   a_valid_not_unknown:
     `ASSUME property (not_unknown(w_valid));
   a_ready_not_unknown:
     `ASSERT property (not_unknown(w_ready));
 
   a_data_stall_stable:
-    `ASSUME property (stable_next_when(w_data, stall));
+    `ASSUME property (stable_next_when(stall, w_data));
   a_data_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(w_data, w_valid));
+    `ASSUME property (not_unknown_when(w_valid, w_data));
 
   a_strb_stall_stable:
-    `ASSUME property (stable_next_when(w_strb, stall));
+    `ASSUME property (stable_next_when(stall, w_strb));
   a_strb_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(w_strb, w_valid));
+    `ASSUME property (not_unknown_when(w_valid, w_strb));
 
   a_last_stall_stable:
-    `ASSUME property (stable_next_when(w_last, stall));
+    `ASSUME property (stable_next_when(stall, w_last));
   a_last_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(w_last, w_valid));
+    `ASSUME property (not_unknown_when(w_valid, w_last));
 
   a_user_stall_stable:
-    `ASSUME property (stable_next_when(w_user, stall));
+    `ASSUME property (stable_next_when(stall, w_user));
   a_user_not_unknown_when_valid:
-    `ASSUME property (not_unknown_when(w_user, w_valid));
+    `ASSUME property (not_unknown_when(w_valid, w_user));
 endmodule
 
 `undef ROLE
