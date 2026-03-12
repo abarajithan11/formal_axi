@@ -32,6 +32,8 @@ module `CONCAT(`ROLE,_w_fvip) #(
   wire hsk = w_valid && w_ready;
   wire hsk_last = hsk && w_last;
 
+  //___________ VALID ___________
+
   a_valid_low_after:
     `ASSUME property (low_after(rstn, w_valid));
   a_valid_not_with_rise:
@@ -45,20 +47,28 @@ module `CONCAT(`ROLE,_w_fvip) #(
   c_valid_before_ready:
     cover property (valid_before_ready(w_valid, w_ready));
 
+  //___________ DATA ___________
+
   a_data_stall_stable:
     `ASSUME property (stable_next_when(stall, w_data));
   a_data_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(w_valid, w_data));
+
+  //___________ STRB ___________
 
   a_strb_stall_stable:
     `ASSUME property (stable_next_when(stall, w_strb));
   a_strb_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(w_valid, w_strb));
 
+  //___________ LAST ___________
+
   a_last_stall_stable:
     `ASSUME property (stable_next_when(stall, w_last));
   a_last_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(w_valid, w_last));
+
+  //___________ USER ___________
 
   a_user_stall_stable:
     `ASSUME property (stable_next_when(stall, w_user));
