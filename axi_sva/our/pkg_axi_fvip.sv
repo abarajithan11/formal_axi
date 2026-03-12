@@ -21,4 +21,9 @@ package pkg_axi_fvip;
   property stable_next_when(when_cond, signal);
     when_cond |=> $stable(signal);
   endproperty
+
+  property valid_before_ready(valid, ready);
+    valid && !ready;
+  endproperty
+
 endpackage

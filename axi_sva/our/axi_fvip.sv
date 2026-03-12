@@ -75,33 +75,19 @@ module `CONCAT(`ROLE,_axi_fvip) #(
   input logic r_last,
   input logic [USER_W-1:0] r_user
 );
-  `CONCAT(`AW_ROLE,_aw_fvip) #(
-    .ADDR_W(ADDR_W),
-    .ID_W(ID_W),
-    .USER_W(USER_W)
-  ) u_aw_fvip (.*);
 
-  `CONCAT(`AR_ROLE,_ar_fvip) #(
-    .ADDR_W(ADDR_W),
-    .ID_W(ID_W),
-    .USER_W(USER_W)
-  ) u_ar_fvip (.*);
+  logic rstn_at_posedge;
+  always_ff @(posedge clk) rstn_at_posedge <= rstn;
 
-  `CONCAT(`W_ROLE,_w_fvip) #(
-    .DATA_W(DATA_W),
-    .USER_W(USER_W)
-  ) u_w_fvip (.*);
+  a_rstn_rises_with_posedge:
+    assume property (@(negedge clk) disable iff (0) rstn |-> rstn_at_posedge);
 
-  `CONCAT(`R_ROLE,_r_fvip) #(
-    .DATA_W(DATA_W),
-    .ID_W(ID_W),
-    .USER_W(USER_W)
-  ) u_r_fvip (.*);
+  `CONCAT(`AW_ROLE,_aw_fvip) #(.ADDR_W(ADDR_W), .ID_W(ID_W), .USER_W(USER_W)) u_aw_fvip (.*);
+  `CONCAT(`AR_ROLE,_ar_fvip) #(.ADDR_W(ADDR_W), .ID_W(ID_W), .USER_W(USER_W)) u_ar_fvip (.*);
+  `CONCAT(`W_ROLE,_w_fvip) #(.DATA_W(DATA_W), .USER_W(USER_W)) u_w_fvip (.*);
+  `CONCAT(`R_ROLE,_r_fvip) #(.DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_r_fvip (.*);
+  `CONCAT(`B_ROLE,_b_fvip) #(.ID_W(ID_W), .USER_W(USER_W)) u_b_fvip (.*);
 
-  `CONCAT(`B_ROLE,_b_fvip) #(
-    .ID_W(ID_W),
-    .USER_W(USER_W)
-  ) u_b_fvip (.*);
 endmodule
 
 `undef ROLE

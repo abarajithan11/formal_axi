@@ -50,6 +50,9 @@ module `CONCAT(`ROLE,_aw_fvip) #(
   a_ready_not_unknown:
     `ASSERT property (not_unknown(aw_ready));
 
+  c_valid_before_ready:
+    cover property (valid_before_ready(aw_valid, aw_ready));
+
   a_id_stall_stable:
     `ASSUME property (stable_next_when(stall, aw_id));
   a_id_not_unknown_when_valid:
