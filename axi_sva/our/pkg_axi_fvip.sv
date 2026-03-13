@@ -85,12 +85,12 @@ package pkg_axi_fvip;
   endproperty
 
   // FIXED burst: length 1-16 transfers (A3.4.1, Burst length)
-  property fixed_len(valid, burst, len);
+  property burst_fixed_len(valid, burst, len);
     valid && burst == BURST_FIXED |-> len <= 8'd15;
   endproperty
 
   // WRAP burst: length must be 2, 4, 8, or 16 (A3.4.1, Burst type)
-  property wrap_len(valid, burst, len);
+  property burst_wrap_len(valid, burst, len);
     valid && burst == BURST_WRAP |-> len inside {8'd1, 8'd3, 8'd7, 8'd15};
   endproperty
 
@@ -99,14 +99,19 @@ package pkg_axi_fvip;
   let total_bytes(len, size)   = (len + 1) << size;
   let end_byte(addr, len, size) = aligned_addr(addr, size) + total_bytes(len, size) - 1;
 
-  property no_4kb_cross(valid, burst, addr, len, size);
+  property burst_no_4kb_cross(valid, burst, addr, len, size);
     valid && burst == BURST_INCR |->
       (addr >> 12) == (end_byte(addr, len, size) >> 12);
   endproperty
 
   // WRAP start address must be aligned to transfer size (A3.4.1)
-  property wrap_addr_aligned(valid, burst, addr, size);
+  property burst_wrap_addr_aligned(valid, burst, addr, size);
     valid && burst == BURST_WRAP |-> addr == aligned_addr(addr, size);
+  endproperty
+
+  // Packet legnth must not exceed 256 transfers
+  property burst_packet_len_max(hsk_last, len);
+    hsk_last |-> len <= 8'd255;
   endproperty
 
   //___________ LOCK ___________

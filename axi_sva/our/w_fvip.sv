@@ -32,6 +32,12 @@ module `CONCAT(`ROLE,_w_fvip) #(
   wire hsk = w_valid && w_ready;
   wire hsk_last = hsk && w_last;
 
+  logic unsigned [8:0] i_beat;  // one extra bit to detect overflow
+  always_ff @(posedge clk)
+    if      (!rstn)    i_beat <= '0;
+    else if (hsk_last) i_beat <= '0;
+    else if (hsk)      i_beat <= i_beat + 8'd1;
+
   //___________ VALID ___________
 
   a_valid_low_after:
@@ -70,6 +76,10 @@ module `CONCAT(`ROLE,_w_fvip) #(
     `ASSUME property (stable_next_when(stall, w_last));
   a_last_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(w_valid, w_last));
+
+  a_packet_len_max:
+    `ASSUME property (burst_packet_len_max(hsk_last, i_beat));
+
 
   //___________ USER ___________
 

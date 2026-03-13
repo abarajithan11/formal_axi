@@ -97,13 +97,13 @@ module `CONCAT(`ROLE,_ar_fvip) #(
   a_burst_not_reserved:
     `ASSUME property (burst_not_reserved(ar_valid, ar_burst));
   a_burst_fixed_len:
-    `ASSUME property (fixed_len(ar_valid, ar_burst, ar_len));
+    `ASSUME property (burst_fixed_len(ar_valid, ar_burst, ar_len));
   a_burst_wrap_len:
-    `ASSUME property (wrap_len(ar_valid, ar_burst, ar_len));
+    `ASSUME property (burst_wrap_len(ar_valid, ar_burst, ar_len));
   a_burst_no_4kb_cross:
-    `ASSUME property (no_4kb_cross(ar_valid, ar_burst, ar_addr, ar_len, ar_size));
+    `ASSUME property (burst_no_4kb_cross(ar_valid, ar_burst, ar_addr, ar_len, ar_size));
   a_burst_wrap_aligned:
-    `ASSUME property (wrap_addr_aligned(ar_valid, ar_burst, ar_addr, ar_size));
+    `ASSUME property (burst_wrap_addr_aligned(ar_valid, ar_burst, ar_addr, ar_size));
 
   //___________ LOCK ___________
 
