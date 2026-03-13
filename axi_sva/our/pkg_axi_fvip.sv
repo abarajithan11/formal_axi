@@ -40,6 +40,80 @@ package pkg_axi_fvip;
     CACHE_WB_RW_ALLOC     = 4'b1111   // Write-back Read-and-Write-allocate
   } cache_e;
 
+  //___________ FUNCTIONS ___________
+
+  let aligned_addr(addr, size) = (addr >> size) << size;
+  let total_bytes(len, size)   = (len + 1) << size;
+  let end_byte(addr, len, size) = aligned_addr(addr, size) + total_bytes(len, size) - 1;
+
+  function automatic logic wstrb_valid(
+    // wstrb_valid — validate WSTRB for one W-beat
+    //
+    // Follows A3.4.1 equations (not A3.4.2 pseudocode, which has an
+    // inconsistency in the unaligned INCR addr-update — breaks
+    // Figure A3-13 case 4).
+    //
+    // PULP axi_pkg bug: beat_upper_byte uses the aligned formula on
+    // beats > 0 unconditionally, but A3.4.2 never sets aligned = TRUE
+    // for FIXED.  Unaligned FIXED upper_byte overflows the bus width.
+    input longint unsigned  awaddr,
+    input logic [2:0]       awsize,
+    input logic [1:0]       awburst,
+    input logic [7:0]       awlen,
+    input logic [7:0]       beat_idx,
+    input logic [127:0]     wstrb,
+    input int               DATA_W
+    );
+
+    longint unsigned num_bytes      = longint'(1) << awsize;
+    longint unsigned bus_bytes      = DATA_W / 8;
+    longint unsigned start_aligned  = aligned_addr(awaddr, awsize);  // package let
+
+    // A3.4.1 Address_N + A3.4.2 aligned flag
+    longint unsigned beat_addr;
+    logic            is_aligned;
+
+    if (beat_idx == 0 || awburst == BURST_FIXED) begin
+      // A3.4.2: FIXED never updates addr or is_aligned
+      beat_addr  = awaddr;
+      is_aligned = (awaddr == start_aligned);
+
+    end else if (awburst == BURST_INCR) begin
+      // A3.4.1: Address_N = Aligned_Address + (N-1) * Number_Bytes
+      beat_addr  = start_aligned + longint'(beat_idx) * num_bytes;
+      is_aligned = 1;
+
+    end else begin
+      // A3.4.1: WRAP — same as INCR with wrap-around
+      longint unsigned txn_bytes      = total_bytes(awlen, awsize);  // package let
+      longint unsigned wrap_boundary  = (awaddr / txn_bytes) * txn_bytes;
+
+      beat_addr = start_aligned + longint'(beat_idx) * num_bytes;
+      if (beat_addr >= wrap_boundary + txn_bytes)
+        beat_addr -= txn_bytes;
+      is_aligned = 1;
+    end
+
+    // A3.4.1 byte-lane equations (page A3-47)
+    int lower_lane = int'(beat_addr % bus_bytes);
+    int upper_lane;
+
+    if (is_aligned)
+      upper_lane = lower_lane + int'(num_bytes) - 1;
+    else
+      upper_lane = int'(  start_aligned + num_bytes - 1
+                        - (beat_addr / bus_bytes) * bus_bytes);
+
+    // A3.4.3: strobes HIGH only for valid byte lanes
+    logic [127:0] legal_lanes;
+    legal_lanes = '0;
+    for (int i = lower_lane; i <= upper_lane; i++)
+      legal_lanes[i] = 1'b1;
+    return (wstrb & ~legal_lanes) == '0;
+
+  endfunction
+
+
   //___________ RESET ___________
 
   property low_after(rstn, valid);
@@ -95,10 +169,6 @@ package pkg_axi_fvip;
   endproperty
 
   // Burst must not cross 4KB address boundary (A3.4.1)
-  let aligned_addr(addr, size) = (addr >> size) << size;
-  let total_bytes(len, size)   = (len + 1) << size;
-  let end_byte(addr, len, size) = aligned_addr(addr, size) + total_bytes(len, size) - 1;
-
   property burst_no_4kb_cross(valid, burst, addr, len, size);
     valid && burst == BURST_INCR |->
       (addr >> 12) == (end_byte(addr, len, size) >> 12);
