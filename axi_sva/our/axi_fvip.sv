@@ -1,28 +1,6 @@
-`include "aw_fvip.sv"
-`include "ar_fvip.sv"
-`include "w_fvip.sv"
-`include "r_fvip.sv"
-`include "b_fvip.sv"
+`include "axi_switch_fvip.svh"
 
-`define CONCAT(a,b) a``b
-
-`ifdef MASTER
-  `define ROLE m
-  `define AW_ROLE m
-  `define AR_ROLE m
-  `define W_ROLE m
-  `define R_ROLE s
-  `define B_ROLE s
-`else
-  `define ROLE s
-  `define AW_ROLE s
-  `define AR_ROLE s
-  `define W_ROLE s
-  `define R_ROLE m
-  `define B_ROLE m
-`endif
-
-module `CONCAT(`ROLE,_axi_fvip) #(
+module `MODNAME_AXI #(
   parameter int ADDR_W = 32,
   parameter int DATA_W = 32,
   parameter int ID_W = 4,
@@ -88,18 +66,12 @@ module `CONCAT(`ROLE,_axi_fvip) #(
   a_rstn_rises_with_posedge:
     assume property (@(negedge clk) disable iff (0) rstn |-> rstn_at_posedge);
 
-  `CONCAT(`AW_ROLE,_aw_fvip) #(.ADDR_W(ADDR_W), .DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_aw (.*);
-  `CONCAT(`AR_ROLE,_ar_fvip) #(.ADDR_W(ADDR_W), .DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_ar (.*);
-  `CONCAT(`W_ROLE,_w_fvip) #(.DATA_W(DATA_W), .USER_W(USER_W)) u_w (.*);
-  `CONCAT(`R_ROLE,_r_fvip) #(.DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_r (.*);
-  `CONCAT(`B_ROLE,_b_fvip) #(.ID_W(ID_W), .USER_W(USER_W)) u_b (.*);
+  `MODNAME_AW #(.ADDR_W(ADDR_W), .DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_aw (.*);
+  `MODNAME_AR #(.ADDR_W(ADDR_W), .DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_ar (.*);
+  `MODNAME_W  #(.DATA_W(DATA_W), .USER_W(USER_W)) u_w (.*);
+  `MODNAME_R  #(.DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_r (.*);
+  `MODNAME_B  #(.ID_W(ID_W), .USER_W(USER_W)) u_b (.*);
 
 endmodule
 
-`undef ROLE
-`undef AW_ROLE
-`undef AR_ROLE
-`undef W_ROLE
-`undef R_ROLE
-`undef B_ROLE
-`undef CONCAT
+`undef MODNAME_AXI

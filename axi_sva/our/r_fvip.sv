@@ -1,16 +1,5 @@
-`define CONCAT(a,b) a``b
 
-`ifdef MASTER
-  `define ROLE m
-  `define ASSUME assert
-  `define ASSERT assume
-`else
-  `define ROLE s
-  `define ASSUME assume
-  `define ASSERT assert
-`endif
-
-module `CONCAT(`ROLE,_r_fvip) #(
+module `MODNAME_R #(
   parameter int DATA_W = 32,
   parameter int ID_W = 4,
   parameter int USER_W = 1
@@ -97,7 +86,3 @@ module `CONCAT(`ROLE,_r_fvip) #(
     `ASSUME property (not_unknown_when(r_valid, r_user));
 endmodule
 
-`undef ROLE
-`undef ASSUME
-`undef ASSERT
-`undef CONCAT
