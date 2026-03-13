@@ -111,6 +111,16 @@ module `CONCAT(`ROLE,_ar_fvip) #(
     `ASSUME property (stable_next_when(stall, ar_lock));
   a_lock_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(ar_valid, ar_lock));
+  a_excl_len:
+    `ASSUME property (excl_len(ar_valid, ar_lock, ar_len));
+  a_excl_bytes_pow2:
+    `ASSUME property (excl_bytes_pow2(ar_valid, ar_lock, ar_len, ar_size));
+  a_excl_max_bytes:
+    `ASSUME property (excl_max_bytes(ar_valid, ar_lock, ar_len, ar_size));
+  a_excl_addr_aligned:
+    `ASSUME property (excl_addr_aligned(ar_valid, ar_lock, ar_addr, ar_len, ar_size));
+  a_excl_cache:
+    `ASSUME property (excl_cache(ar_valid, ar_lock, ar_cache));
 
   //___________ CACHE ___________
 

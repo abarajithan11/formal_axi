@@ -96,8 +96,8 @@ package pkg_axi_fvip;
 
   // Burst must not cross 4KB address boundary (A3.4.1)
   let aligned_addr(addr, size) = (addr >> size) << size;
-  let burst_bytes(len, size)   = (len + 1) << size;
-  let end_byte(addr, len, size) = aligned_addr(addr, size) + burst_bytes(len, size) - 1;
+  let total_bytes(len, size)   = (len + 1) << size;
+  let end_byte(addr, len, size) = aligned_addr(addr, size) + total_bytes(len, size) - 1;
 
   property no_4kb_cross(valid, burst, addr, len, size);
     valid && burst == BURST_INCR |->
@@ -107,6 +107,33 @@ package pkg_axi_fvip;
   // WRAP start address must be aligned to transfer size (A3.4.1)
   property wrap_addr_aligned(valid, burst, addr, size);
     valid && burst == BURST_WRAP |-> addr == aligned_addr(addr, size);
+  endproperty
+
+  //___________ LOCK ___________
+
+  // Exclusive burst length must not exceed 16 transfers (A7.2.4)
+  property excl_len(valid, lock, len);
+    valid && lock |-> len <= 8'd15;
+  endproperty
+
+  // Total bytes in exclusive must be power of 2 (A7.2.4)
+  property excl_bytes_pow2(valid, lock, len, size);
+    valid && lock |-> $onehot(total_bytes(len, size));
+  endproperty
+
+  // Max bytes in exclusive burst is 128 (A7.2.4)
+  property excl_max_bytes(valid, lock, len, size);
+    valid && lock |-> total_bytes(len, size) <= 128;
+  endproperty
+
+  // Exclusive address must be aligned to total transaction bytes (A7.2.4)
+  property excl_addr_aligned(valid, lock, addr, len, size);
+    valid && lock |-> (addr & (total_bytes(len, size) - 1)) == '0;
+  endproperty
+
+  // Exclusive AxCACHE[3:2] must be 0b00 (A7.2.4)
+  property excl_cache(valid, lock, cache);
+    valid && lock |-> cache[3:2] == 2'b00;
   endproperty
 
   //___________ CACHE ___________
