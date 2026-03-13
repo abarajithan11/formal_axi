@@ -52,6 +52,9 @@ module `CONCAT(`ROLE,_ar_fvip) #(
   a_ready_not_unknown:
     `ASSERT property (not_unknown(ar_ready));
 
+  a_valid_stall:
+    `ASSUME property (stable_next_when(stall, ar_valid));
+
   c_valid_before_ready:
     cover property (valid_before_ready(ar_valid, ar_ready));
 
@@ -89,6 +92,18 @@ module `CONCAT(`ROLE,_ar_fvip) #(
     `ASSUME property (stable_next_when(stall, ar_burst));
   a_burst_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(ar_valid, ar_burst));
+  a_burst_size_max:
+    `ASSUME property (burst_size_max(ar_valid, ar_size, DATA_W));
+  a_burst_not_reserved:
+    `ASSUME property (burst_not_reserved(ar_valid, ar_burst));
+  a_burst_fixed_len:
+    `ASSUME property (fixed_len(ar_valid, ar_burst, ar_len));
+  a_burst_wrap_len:
+    `ASSUME property (wrap_len(ar_valid, ar_burst, ar_len));
+  a_burst_no_4kb_cross:
+    `ASSUME property (no_4kb_cross(ar_valid, ar_burst, ar_addr, ar_len, ar_size));
+  a_burst_wrap_aligned:
+    `ASSUME property (wrap_addr_aligned(ar_valid, ar_burst, ar_addr, ar_size));
 
   //___________ LOCK ___________
 
@@ -103,6 +118,8 @@ module `CONCAT(`ROLE,_ar_fvip) #(
     `ASSUME property (stable_next_when(stall, ar_cache));
   a_cache_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(ar_valid, ar_cache));
+  a_cache_non_mod:
+    `ASSUME property (cache_non_mod(ar_valid, ar_cache));
 
   //___________ PROT ___________
 

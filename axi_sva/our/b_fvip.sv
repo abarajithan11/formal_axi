@@ -42,6 +42,9 @@ module `CONCAT(`ROLE,_b_fvip) #(
   a_ready_not_unknown:
     `ASSERT property (not_unknown(b_ready));
 
+  a_valid_stall:
+    `ASSUME property (stable_next_when(stall, b_valid));
+
   c_valid_before_ready:
     cover property (valid_before_ready(b_valid, b_ready));
 
