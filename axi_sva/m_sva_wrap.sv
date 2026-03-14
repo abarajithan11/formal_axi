@@ -40,6 +40,8 @@ module m_sva_wrap #(
   //   .axi(axi)
   // );
 
+  // ZipCPU's faxi_master checks a master agent even though the internal
+  // macros are named from the slave's perspective.
   // f_axi_m_wrapper #(
   //   .ADDR_W(ADDR_W),
   //   .DATA_W(DATA_W),

@@ -44,7 +44,7 @@ module tb_axi_xbar;
   ) u_s_sva_wrap (
     .clk(clk),
     .rst(rst),
-    .axi(s_axi)
+    .axi(m_axi)
   );
 
   m_sva_wrap #(
@@ -55,11 +55,10 @@ module tb_axi_xbar;
   ) u_m_sva_wrap (
     .clk(clk),
     .rst(rst),
-    .axi(m_axi)
+    .axi(s_axi)
   );
 
   cover property (@(posedge clk) !rst ##[1:16] s_axi.aw_valid && s_axi.aw_ready);
   cover property (@(posedge clk) !rst ##[1:16] m_axi.ar_valid && m_axi.ar_ready);
 
 endmodule
-

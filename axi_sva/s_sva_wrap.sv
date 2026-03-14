@@ -15,6 +15,7 @@ module s_sva_wrap #(
   input logic rst,
   AXI_BUS.Monitor axi
 );
+  // Slave VIP wrapper: connect this to a master-facing DUT interface.
 // `ifdef HAVE_ARM_AXI_SVA
 //   arm_formal_wrapper #(
 //     .ADDR_W(ADDR_W),
@@ -28,6 +29,8 @@ module s_sva_wrap #(
 //   );
 // `endif
 
+  // Yosys uses DESTINATION for the response-driving side of the link, so the
+  // slave-facing wrapper passes IS_SOURCE=0.
   // yosys_questa_formal_wrapper #(
   //   .ADDR_W(ADDR_W),
   //   .DATA_W(DATA_W),
@@ -40,6 +43,8 @@ module s_sva_wrap #(
   //   .axi(axi)
   // );
 
+  // ZipCPU's faxi_slave checks a slave agent even though many assertions are
+  // phrased in terms of master-vs-slave traffic.
   // f_axi_s_wrapper #(
   //   .ADDR_W(ADDR_W),
   //   .DATA_W(DATA_W),

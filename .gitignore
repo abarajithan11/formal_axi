@@ -1,6 +1,6 @@
 axi_sva/arm
 
-log/
+log*
 work/
 transcript
 vsim.wlf
