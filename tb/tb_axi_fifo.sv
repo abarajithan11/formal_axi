@@ -44,7 +44,7 @@ module tb_axi_fifo;
   ) u_sw (
     .clk(clk),
     .rst(rst),
-    .axi(s_axi)
+    .axi(m_axi)
   );
 
   m_sva_wrap #(
@@ -55,7 +55,7 @@ module tb_axi_fifo;
   ) u_mw (
     .clk(clk),
     .rst(rst),
-    .axi(m_axi)
+    .axi(s_axi)
   );
 
   cover property (@(posedge clk) !rst ##1 dut.aw_empty);

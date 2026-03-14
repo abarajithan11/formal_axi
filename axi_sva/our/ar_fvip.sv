@@ -1,3 +1,14 @@
+// Default is MASTER, to drive a slave
+//  - {valid, data} - driven by fvip (assumed)
+//  - {ready} - observed (asserted)
+
+`ifdef AXI_FVIP_SLAVE_AR
+  `define ASSUME assert
+  `define ASSERT assume
+`else
+  `define ASSUME assume
+  `define ASSERT assert
+`endif
 
 module `MODNAME_AR #(
   parameter int ADDR_W = 32,
@@ -148,3 +159,6 @@ module `MODNAME_AR #(
   a_user_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(ar_valid, ar_user));
 endmodule
+
+`undef ASSUME
+`undef ASSERT

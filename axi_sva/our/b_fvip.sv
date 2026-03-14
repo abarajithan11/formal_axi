@@ -1,3 +1,15 @@
+// Default is MASTER, to drive a slave
+//  - {valid, data} - driven by fvip (assumed)
+//  - {ready} - observed (asserted)
+
+`ifdef AXI_FVIP_SLAVE_B
+  `define ASSUME assert
+  `define ASSERT assume
+`else
+  `define ASSUME assume
+  `define ASSERT assert
+`endif
+
 module `MODNAME_B #(
   parameter int ID_W = 4,
   parameter int USER_W = 1
@@ -57,3 +69,6 @@ module `MODNAME_B #(
   a_user_not_unknown_when_valid:
     `ASSUME property (not_unknown_when(b_valid, b_user));
 endmodule
+
+`undef ASSUME
+`undef ASSERT

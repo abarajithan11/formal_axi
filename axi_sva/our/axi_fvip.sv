@@ -75,3 +75,8 @@ module `MODNAME_AXI #(
 endmodule
 
 `undef MODNAME_AXI
+`undef MODNAME_AW
+`undef MODNAME_AR
+`undef MODNAME_W 
+`undef MODNAME_R 
+`undef MODNAME_B 
