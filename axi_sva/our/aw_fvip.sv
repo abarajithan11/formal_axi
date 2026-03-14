@@ -5,16 +5,20 @@
 `ifdef AXI_FVIP_SLAVE_AW
   `define ASSUME assert
   `define ASSERT assume
+  `define AXI_MAX_STALL AXI_MAX_STALL_ENV
 `else
   `define ASSUME assume
   `define ASSERT assert
+  `define AXI_MAX_STALL AXI_MAX_STALL_DUT
 `endif
 
 module `MODNAME_AW #(
   parameter int ADDR_W = 32,
   parameter int DATA_W = 32,
   parameter int ID_W = 4,
-  parameter int USER_W = 1
+  parameter int USER_W = 1,
+  parameter int AXI_MAX_STALL_ENV = 10,
+  parameter int AXI_MAX_STALL_DUT = 100
 ) (
   input logic clk,
   input logic rstn,
@@ -40,6 +44,11 @@ module `MODNAME_AW #(
 
   wire stall = aw_valid && !aw_ready;
   wire hsk = aw_valid && aw_ready;
+
+  //___________ READY ___________
+
+  a_max_ready_after_valid:
+    `ASSERT property (max_ready_after_valid(aw_valid, aw_ready, `AXI_MAX_STALL));
 
   //___________ VALID ___________
 
@@ -170,3 +179,4 @@ endmodule
 
 `undef ASSUME
 `undef ASSERT
+`undef AXI_MAX_STALL

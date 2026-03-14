@@ -4,7 +4,9 @@ module `MODNAME_AXI #(
   parameter int ADDR_W = 32,
   parameter int DATA_W = 32,
   parameter int ID_W = 4,
-  parameter int USER_W = 1
+  parameter int USER_W = 1,
+  parameter int AXI_MAX_STALL_ENV = 10,
+  parameter int AXI_MAX_STALL_DUT = 100
 ) (
   input logic clk,
   input logic rstn,
@@ -66,11 +68,41 @@ module `MODNAME_AXI #(
   a_rstn_rises_with_posedge:
     assume property (@(negedge clk) disable iff (0) rstn |-> rstn_at_posedge);
 
-  `MODNAME_AW #(.ADDR_W(ADDR_W), .DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_aw (.*);
-  `MODNAME_AR #(.ADDR_W(ADDR_W), .DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_ar (.*);
-  `MODNAME_W  #(.DATA_W(DATA_W), .USER_W(USER_W)) u_w (.*);
-  `MODNAME_R  #(.DATA_W(DATA_W), .ID_W(ID_W), .USER_W(USER_W)) u_r (.*);
-  `MODNAME_B  #(.ID_W(ID_W), .USER_W(USER_W)) u_b (.*);
+  `MODNAME_AW #(
+    .ADDR_W(ADDR_W), 
+    .DATA_W(DATA_W), 
+    .ID_W(ID_W), 
+    .USER_W(USER_W), 
+    .AXI_MAX_STALL_ENV(AXI_MAX_STALL_ENV), 
+    .AXI_MAX_STALL_DUT(AXI_MAX_STALL_DUT)
+    ) u_aw (.*);
+  `MODNAME_AR #(
+    .ADDR_W(ADDR_W), 
+    .DATA_W(DATA_W), 
+    .ID_W(ID_W), 
+    .USER_W(USER_W), 
+    .AXI_MAX_STALL_ENV(AXI_MAX_STALL_ENV), 
+    .AXI_MAX_STALL_DUT(AXI_MAX_STALL_DUT)
+    ) u_ar (.*);
+  `MODNAME_W  #(
+    .DATA_W(DATA_W), 
+    .USER_W(USER_W), 
+    .AXI_MAX_STALL_ENV(AXI_MAX_STALL_ENV), 
+    .AXI_MAX_STALL_DUT(AXI_MAX_STALL_DUT)
+    ) u_w (.*);
+  `MODNAME_R  #(
+    .DATA_W(DATA_W), 
+    .ID_W(ID_W), 
+    .USER_W(USER_W), 
+    .AXI_MAX_STALL_ENV(AXI_MAX_STALL_ENV), 
+    .AXI_MAX_STALL_DUT(AXI_MAX_STALL_DUT)
+    ) u_r (.*);
+  `MODNAME_B  #(
+    .ID_W(ID_W), 
+    .USER_W(USER_W), 
+    .AXI_MAX_STALL_ENV(AXI_MAX_STALL_ENV), 
+    .AXI_MAX_STALL_DUT(AXI_MAX_STALL_DUT)
+    ) u_b (.*);
 
 endmodule
 

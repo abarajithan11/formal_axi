@@ -59,7 +59,9 @@ module s_sva_wrap #(
     .ADDR_W(ADDR_W),
     .DATA_W(DATA_W),
     .ID_W(ID_W),
-    .USER_W(USER_W)
+    .USER_W(USER_W),
+    .AXI_MAX_STALL_ENV(10),
+    .AXI_MAX_STALL_DUT(100)
   ) u_our (
     .clk(clk),
     .rstn(~rst),

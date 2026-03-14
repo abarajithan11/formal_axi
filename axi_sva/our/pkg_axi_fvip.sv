@@ -147,6 +147,10 @@ package pkg_axi_fvip;
     valid && !ready;
   endproperty
 
+  property max_ready_after_valid(valid, ready, max_stall);
+     valid |-> ##[0:max_stall] ready;
+  endproperty
+
   //___________ BURST ___________
 
   // Burst size must not exceed data bus width (A3.4.1, Burst size)
