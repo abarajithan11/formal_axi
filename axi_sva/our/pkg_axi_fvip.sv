@@ -70,8 +70,10 @@ package pkg_axi_fvip;
     longint unsigned start_aligned  = aligned_addr(awaddr, awsize);  // package let
 
     // A3.4.1 Address_N + A3.4.2 aligned flag
-    longint unsigned beat_addr;
-    logic            is_aligned;
+    logic is_aligned;
+    longint unsigned beat_addr, txn_bytes, wrap_boundary;
+    int lower_lane, upper_lane;
+    logic [127:0] legal_lanes;
 
     if (beat_idx == 0 || awburst == BURST_FIXED) begin
       // A3.4.2: FIXED never updates addr or is_aligned
@@ -85,8 +87,8 @@ package pkg_axi_fvip;
 
     end else begin
       // A3.4.1: WRAP — same as INCR with wrap-around
-      longint unsigned txn_bytes      = total_bytes(awlen, awsize);  // package let
-      longint unsigned wrap_boundary  = (awaddr / txn_bytes) * txn_bytes;
+      txn_bytes      = total_bytes(awlen, awsize);  // package let
+      wrap_boundary  = (awaddr / txn_bytes) * txn_bytes;
 
       beat_addr = start_aligned + longint'(beat_idx) * num_bytes;
       if (beat_addr >= wrap_boundary + txn_bytes)
@@ -95,8 +97,7 @@ package pkg_axi_fvip;
     end
 
     // A3.4.1 byte-lane equations (page A3-47)
-    int lower_lane = int'(beat_addr % bus_bytes);
-    int upper_lane;
+    lower_lane = int'(beat_addr % bus_bytes);
 
     if (is_aligned)
       upper_lane = lower_lane + int'(num_bytes) - 1;
@@ -105,7 +106,7 @@ package pkg_axi_fvip;
                         - (beat_addr / bus_bytes) * bus_bytes);
 
     // A3.4.3: strobes HIGH only for valid byte lanes
-    logic [127:0] legal_lanes;
+    
     legal_lanes = '0;
     for (int i = lower_lane; i <= upper_lane; i++)
       legal_lanes[i] = 1'b1;
